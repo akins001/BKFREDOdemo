@@ -3,11 +3,11 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Phone } from "lucide-react";
 
 const navItems = [
-  { label: "Home", path: "/" },
-  { label: "About", path: "/about" },
-  { label: "Services", path: "/services" },
-  { label: "Projects", path: "/projects" },
-  { label: "Contact", path: "/contact" },
+  { label: "HOME", path: "/" },
+  { label: "ABOUT", path: "/about" },
+  { label: "SERVICES", path: "/services" },
+  { label: "PROJECTS", path: "/projects" },
+  { label: "CONTACT", path: "/contact" },
 ];
 
 const Navbar = () => {
@@ -18,7 +18,7 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-section-dark/95 backdrop-blur-md border-b border-section-dark">
       <div className="container-custom flex items-center justify-between h-16 md:h-20">
         <Link to="/" className="font-heading font-bold text-xl md:text-2xl text-section-dark-foreground tracking-wider">
-          BUILDCRAFT<span className="text-primary">.</span>
+          B.K FRED O<span className="text-primary">.</span>
         </Link>
 
         {/* Desktop */}
@@ -35,7 +35,7 @@ const Navbar = () => {
             </Link>
           ))}
           <a
-            href="tel:+1234567890"
+            href="tel:+234XXXXXXXX"
             className="gradient-primary text-primary-foreground px-5 py-2.5 rounded text-sm font-semibold flex items-center gap-2 hover:opacity-90 transition-opacity"
           >
             <Phone className="w-4 h-4" />
