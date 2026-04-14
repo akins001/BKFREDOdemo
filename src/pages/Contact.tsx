@@ -3,10 +3,10 @@ import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const contactInfo = [
-  { icon: Phone, label: "Phone", value: "+1 (234) 567-890", href: "tel:+1234567890" },
-  { icon: Mail, label: "Email", value: "info@buildcraft.com", href: "mailto:info@buildcraft.com" },
-  { icon: MapPin, label: "Address", value: "123 Construction Ave, Building City, BC 10001" },
-  { icon: Clock, label: "Hours", value: "Mon–Fri: 8am–6pm | Sat: 9am–4pm" },
+  { icon: Phone, label: "Phone", value: "+234 XXX XXX XXXX", href: "tel:+234XXXXXXXX" },
+  { icon: Mail, label: "Email", value: "info@bkfredo.com", href: "mailto:info@bkfredo.com" },
+  { icon: MapPin, label: "Address", value: "Benin City, Edo State, Nigeria" },
+  { icon: Clock, label: "Hours", value: "Mon–Sat: 8am–6pm" },
 ];
 
 const Contact = () => {
@@ -30,11 +30,10 @@ const Contact = () => {
 
       <section className="section-padding bg-background">
         <div className="container-custom grid md:grid-cols-2 gap-12">
-          {/* Info */}
           <div>
             <h2 className="text-2xl font-heading font-bold text-foreground mb-6">Let's Discuss Your Project</h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Whether you're renovating a bathroom, building a new home, or fitting out a commercial space, our team is ready to help you find the perfect doors and tiles.
+              Whether you're renovating, building a new home, or looking for premium Turkish doors and quality tiles, our team is ready to help you bring your vision to life.
             </p>
             <div className="space-y-5">
               {contactInfo.map((c) => (
@@ -55,7 +54,6 @@ const Contact = () => {
             </div>
           </div>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="bg-card border border-border rounded-lg p-8 space-y-5">
             <div>
               <label className="block text-sm font-medium text-foreground mb-1.5">Full Name</label>
@@ -64,7 +62,7 @@ const Contact = () => {
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 className="w-full border border-input rounded px-4 py-3 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                placeholder="John Doe"
+                placeholder="Your Name"
               />
             </div>
             <div className="grid sm:grid-cols-2 gap-5">
@@ -76,7 +74,7 @@ const Contact = () => {
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   className="w-full border border-input rounded px-4 py-3 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                  placeholder="john@example.com"
+                  placeholder="you@example.com"
                 />
               </div>
               <div>
@@ -85,7 +83,7 @@ const Contact = () => {
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
                   className="w-full border border-input rounded px-4 py-3 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                  placeholder="+1 (234) 567-890"
+                  placeholder="+234 XXX XXX XXXX"
                 />
               </div>
             </div>
