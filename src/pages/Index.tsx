@@ -94,11 +94,17 @@ const Index = () => {
       <section className="bg-primary">
         <div className="container-custom py-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            {stats.map((s) => (
-              <div key={s.label}>
+            {stats.map((s, i) => (
+              <motion.div
+                key={s.label}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+              >
                 <p className="text-3xl md:text-4xl font-heading font-extrabold text-primary-foreground">{s.value}</p>
                 <p className="text-primary-foreground/70 text-sm mt-1">{s.label}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -107,24 +113,28 @@ const Index = () => {
       {/* Our Collection */}
       <section className="section-padding bg-background">
         <div className="container-custom">
-          <div className="text-center mb-14">
-            <p className="text-primary font-semibold tracking-widest uppercase text-sm mb-2">What We Offer</p>
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground">Our Collection</h2>
-            <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
-              Our collection spans a diverse range, featuring exquisite Turkish luxury doors, non-slip floor and wall tiles, and an array of premium-quality materials.
-            </p>
-          </div>
+          <ScrollReveal>
+            <div className="text-center mb-14">
+              <p className="text-primary font-semibold tracking-widest uppercase text-sm mb-2">What We Offer</p>
+              <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground">Our Collection</h2>
+              <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
+                Our collection spans a diverse range, featuring exquisite Turkish luxury doors, non-slip floor and wall tiles, and an array of premium-quality materials.
+              </p>
+            </div>
+          </ScrollReveal>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {collection.map((item) => (
-              <div key={item.title} className="group bg-card border border-border rounded-lg overflow-hidden card-hover">
-                <div className="overflow-hidden">
-                  <img src={item.img} alt={item.title} className="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" width={800} height={800} />
+            {collection.map((item, i) => (
+              <ScrollReveal key={item.title} delay={i * 0.1}>
+                <div className="group bg-card border border-border rounded-lg overflow-hidden card-hover h-full">
+                  <div className="overflow-hidden">
+                    <img src={item.img} alt={item.title} className="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" width={800} height={800} />
+                  </div>
+                  <div className="p-5">
+                    <h3 className="text-lg font-heading font-bold text-foreground mb-2">{item.title}</h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed">{item.desc}</p>
+                  </div>
                 </div>
-                <div className="p-5">
-                  <h3 className="text-lg font-heading font-bold text-foreground mb-2">{item.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{item.desc}</p>
-                </div>
-              </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -137,18 +147,20 @@ const Index = () => {
             {[
               { img: doorsImg, title: "Turkish Luxury Doors", desc: "Experience elegance and security with our exquisite Turkish luxury doors, blending traditional craftsmanship and modern design.", link: "/services" },
               { img: tilesImg, title: "Premium Tiles Collection", desc: "From Spanish charm to Nigerian allure, our diverse tile collection transforms spaces with quality and cultural elegance.", link: "/services" },
-            ].map((p) => (
-              <Link to={p.link} key={p.title} className="group relative overflow-hidden rounded-lg card-hover">
-                <img src={p.img} alt={p.title} className="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" width={800} height={600} />
-                <div className="absolute inset-0 bg-foreground/50 group-hover:bg-foreground/60 transition-colors" />
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h3 className="text-2xl font-heading font-bold text-section-dark-foreground mb-2">{p.title}</h3>
-                  <p className="text-section-dark-foreground/80 text-sm">{p.desc}</p>
-                  <span className="inline-flex items-center gap-1 text-primary font-semibold text-sm mt-3 group-hover:gap-2 transition-all">
-                    Explore <ArrowRight className="w-4 h-4" />
-                  </span>
-                </div>
-              </Link>
+            ].map((p, i) => (
+              <ScrollReveal key={p.title} direction={i === 0 ? "right" : "left"} delay={i * 0.1}>
+                <Link to={p.link} className="group relative overflow-hidden rounded-lg card-hover block">
+                  <img src={p.img} alt={p.title} className="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" width={800} height={600} />
+                  <div className="absolute inset-0 bg-foreground/50 group-hover:bg-foreground/60 transition-colors" />
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <h3 className="text-2xl font-heading font-bold text-section-dark-foreground mb-2">{p.title}</h3>
+                    <p className="text-section-dark-foreground/80 text-sm">{p.desc}</p>
+                    <span className="inline-flex items-center gap-1 text-primary font-semibold text-sm mt-3 group-hover:gap-2 transition-all">
+                      Explore <ArrowRight className="w-4 h-4" />
+                    </span>
+                  </div>
+                </Link>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -157,19 +169,23 @@ const Index = () => {
       {/* Why Choose Us */}
       <section className="section-padding bg-background">
         <div className="container-custom">
-          <div className="text-center mb-14">
-            <p className="text-primary font-semibold tracking-widest uppercase text-sm mb-2">Why Choose Us</p>
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground">We Offer You</h2>
-          </div>
+          <ScrollReveal>
+            <div className="text-center mb-14">
+              <p className="text-primary font-semibold tracking-widest uppercase text-sm mb-2">Why Choose Us</p>
+              <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground">We Offer You</h2>
+            </div>
+          </ScrollReveal>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((f) => (
-              <div key={f.title} className="bg-card p-6 rounded-lg card-hover text-center border border-border">
-                <div className="w-14 h-14 gradient-primary rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <f.icon className="w-7 h-7 text-primary-foreground" />
+            {features.map((f, i) => (
+              <ScrollReveal key={f.title} delay={i * 0.1}>
+                <div className="bg-card p-6 rounded-lg card-hover text-center border border-border h-full">
+                  <div className="w-14 h-14 gradient-primary rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <f.icon className="w-7 h-7 text-primary-foreground" />
+                  </div>
+                  <h3 className="font-heading font-bold text-foreground mb-2">{f.title}</h3>
+                  <p className="text-muted-foreground text-sm">{f.desc}</p>
                 </div>
-                <h3 className="font-heading font-bold text-foreground mb-2">{f.title}</h3>
-                <p className="text-muted-foreground text-sm">{f.desc}</p>
-              </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -178,19 +194,31 @@ const Index = () => {
       {/* Testimonials */}
       <section className="section-padding bg-section-dark">
         <div className="container-custom">
-          <div className="text-center mb-14">
-            <p className="text-primary font-semibold tracking-widest uppercase text-sm mb-2">Testimonials</p>
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-section-dark-foreground">
-              Feedback from Our Valued Customers
-            </h2>
-          </div>
+          <ScrollReveal>
+            <div className="text-center mb-14">
+              <p className="text-primary font-semibold tracking-widest uppercase text-sm mb-2">Testimonials</p>
+              <h2 className="text-3xl md:text-4xl font-heading font-bold text-section-dark-foreground">
+                Feedback from Our Valued Customers
+              </h2>
+            </div>
+          </ScrollReveal>
           <div className="max-w-3xl mx-auto text-center">
             <Quote className="w-12 h-12 text-primary/30 mx-auto mb-6" />
-            <p className="text-section-dark-foreground/80 text-lg leading-relaxed mb-8 italic">
-              "{testimonials[activeTestimonial].text}"
-            </p>
-            <p className="text-primary font-heading font-bold text-xl">{testimonials[activeTestimonial].name}</p>
-            <p className="text-section-dark-foreground/50 text-sm">Client</p>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTestimonial}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.4 }}
+              >
+                <p className="text-section-dark-foreground/80 text-lg leading-relaxed mb-8 italic">
+                  "{testimonials[activeTestimonial].text}"
+                </p>
+                <p className="text-primary font-heading font-bold text-xl">{testimonials[activeTestimonial].name}</p>
+                <p className="text-section-dark-foreground/50 text-sm">Client</p>
+              </motion.div>
+            </AnimatePresence>
             <div className="flex justify-center gap-2 mt-8">
               {testimonials.map((_, i) => (
                 <button
@@ -208,19 +236,18 @@ const Index = () => {
       {/* CTA */}
       <section className="section-padding bg-muted">
         <div className="container-custom text-center">
-          <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-4">
-            Ready to Start Your Project?
-          </h2>
-          <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
-            Let us bring your vision to life. Contact us today for premium Turkish doors, quality tiles, and expert construction services.
-          </p>
-          <Link to="/contact" className="gradient-primary text-primary-foreground px-10 py-4 rounded font-semibold hover:opacity-90 transition-opacity inline-flex items-center gap-2">
-            Contact Us <ArrowRight className="w-4 h-4" />
-          </Link>
+          <ScrollReveal>
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-4">
+              Ready to Start Your Project?
+            </h2>
+            <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
+              Let us bring your vision to life. Contact us today for premium Turkish doors, quality tiles, and expert construction services.
+            </p>
+            <Link to="/contact" className="gradient-primary text-primary-foreground px-10 py-4 rounded font-semibold hover:opacity-90 transition-opacity inline-flex items-center gap-2">
+              Contact Us <ArrowRight className="w-4 h-4" />
+            </Link>
+          </ScrollReveal>
         </div>
       </section>
-    </div>
-  );
-};
 
 export default Index;
