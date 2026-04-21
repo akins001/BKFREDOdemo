@@ -1,6 +1,7 @@
 import { CheckCircle } from "lucide-react";
 import teamImg from "@/assets/about-team.jpg";
 import ceoImg from "@/assets/ceo-portrait.jpg";
+import ScrollReveal from "@/components/ScrollReveal";
 
 const values = [
   "Premium quality Turkish luxury doors and tiles",
@@ -16,15 +17,17 @@ const About = () => (
     {/* Page Header */}
     <section className="bg-section-dark section-padding text-center">
       <div className="container-custom">
-        <p className="text-primary font-semibold tracking-widest uppercase text-sm mb-2">Who We Are</p>
-        <h1 className="text-4xl md:text-5xl font-heading font-extrabold text-section-dark-foreground">About B.K FRED O</h1>
+        <ScrollReveal>
+          <p className="text-primary font-semibold tracking-widest uppercase text-sm mb-2">Who We Are</p>
+          <h1 className="text-4xl md:text-5xl font-heading font-extrabold text-section-dark-foreground">About B.K FRED O</h1>
+        </ScrollReveal>
       </div>
     </section>
 
     {/* Story */}
     <section className="section-padding bg-background">
       <div className="container-custom grid md:grid-cols-2 gap-12 items-center">
-        <div>
+        <ScrollReveal direction="right">
           <p className="text-primary font-semibold tracking-widest uppercase text-sm mb-2">Our Story</p>
           <h2 className="text-3xl font-heading font-bold text-foreground mb-6">Building Excellence</h2>
           <p className="text-muted-foreground leading-relaxed mb-4">
@@ -33,25 +36,31 @@ const About = () => (
           <p className="text-muted-foreground leading-relaxed">
             We offer premium home solutions, including Turkish doors and beautiful tiles, to bring your architectural and design vision to life. Our skilled construction management team ensures stylish and durable spaces for your dream home.
           </p>
-        </div>
-        <div className="rounded-lg overflow-hidden shadow-lg">
-          <img src={teamImg} alt="B.K FRED O team" className="w-full h-full object-cover" loading="lazy" width={800} height={600} />
-        </div>
+        </ScrollReveal>
+        <ScrollReveal direction="left" delay={0.15}>
+          <div className="rounded-lg overflow-hidden shadow-lg">
+            <img src={teamImg} alt="B.K FRED O team" className="w-full h-full object-cover" loading="lazy" width={800} height={600} />
+          </div>
+        </ScrollReveal>
       </div>
     </section>
 
     {/* Meet Our CEO */}
     <section className="section-padding bg-muted">
       <div className="container-custom">
-        <div className="text-center mb-12">
-          <p className="text-primary font-semibold tracking-widest uppercase text-sm mb-2">Leadership</p>
-          <h2 className="text-3xl font-heading font-bold text-foreground">Meet Our CEO</h2>
-        </div>
-        <div className="grid md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
-          <div className="rounded-lg overflow-hidden shadow-lg">
-            <img src={ceoImg} alt="Wilfred Osagie Osaro - CEO" className="w-full h-full object-cover" loading="lazy" width={768} height={1024} />
+        <ScrollReveal>
+          <div className="text-center mb-12">
+            <p className="text-primary font-semibold tracking-widest uppercase text-sm mb-2">Leadership</p>
+            <h2 className="text-3xl font-heading font-bold text-foreground">Meet Our CEO</h2>
           </div>
-          <div>
+        </ScrollReveal>
+        <div className="grid md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
+          <ScrollReveal direction="right">
+            <div className="rounded-lg overflow-hidden shadow-lg">
+              <img src={ceoImg} alt="Wilfred Osagie Osaro - CEO" className="w-full h-full object-cover" loading="lazy" width={768} height={1024} />
+            </div>
+          </ScrollReveal>
+          <ScrollReveal direction="left" delay={0.15}>
             <h3 className="text-2xl font-heading font-bold text-foreground mb-2">Wilfred Osagie Osaro</h3>
             <p className="text-primary font-semibold text-sm mb-6">CEO & Founder</p>
             <p className="text-muted-foreground leading-relaxed mb-4">
@@ -68,7 +77,7 @@ const About = () => (
                 </div>
               ))}
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </div>
     </section>
@@ -76,16 +85,20 @@ const About = () => (
     {/* Values */}
     <section className="section-padding bg-background">
       <div className="container-custom">
-        <div className="text-center mb-12">
-          <p className="text-primary font-semibold tracking-widest uppercase text-sm mb-2">Our Promise</p>
-          <h2 className="text-3xl font-heading font-bold text-foreground">Why Clients Trust Us</h2>
-        </div>
+        <ScrollReveal>
+          <div className="text-center mb-12">
+            <p className="text-primary font-semibold tracking-widest uppercase text-sm mb-2">Our Promise</p>
+            <h2 className="text-3xl font-heading font-bold text-foreground">Why Clients Trust Us</h2>
+          </div>
+        </ScrollReveal>
         <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
-          {values.map((v) => (
-            <div key={v} className="flex items-start gap-3 bg-card p-4 rounded-lg border border-border">
-              <CheckCircle className="w-5 h-5 text-primary mt-0.5 shrink-0" />
-              <span className="text-foreground text-sm">{v}</span>
-            </div>
+          {values.map((v, i) => (
+            <ScrollReveal key={v} delay={i * 0.08}>
+              <div className="flex items-start gap-3 bg-card p-4 rounded-lg border border-border">
+                <CheckCircle className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                <span className="text-foreground text-sm">{v}</span>
+              </div>
+            </ScrollReveal>
           ))}
         </div>
       </div>
