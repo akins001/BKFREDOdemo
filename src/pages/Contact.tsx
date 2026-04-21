@@ -4,9 +4,9 @@ import { useToast } from "@/hooks/use-toast";
 import ScrollReveal from "@/components/ScrollReveal";
 
 const contactInfo = [
-  { icon: Phone, label: "Phone", value: "+234 XXX XXX XXXX", href: "tel:+234XXXXXXXX" },
-  { icon: Mail, label: "Email", value: "info@bkfredo.com", href: "mailto:info@bkfredo.com" },
-  { icon: MapPin, label: "Address", value: "Benin City, Edo State, Nigeria" },
+  { icon: Phone, label: "Call Us", value: "+234 806 536 1172", href: "tel:+2348065361172" },
+  { icon: Mail, label: "Email Us", value: "contact@bkfredo.com", href: "mailto:contact@bkfredo.com" },
+  { icon: MapPin, label: "Our Address", value: "23, Cook Road, Between Forestry & Mission Road, Benin City, Edo State, Nigeria." },
   { icon: Clock, label: "Hours", value: "Mon–Sat: 8am–6pm" },
 ];
 
@@ -87,7 +87,7 @@ const Contact = () => {
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
                   className="w-full border border-input rounded px-4 py-3 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                  placeholder="+234 XXX XXX XXXX"
+                  placeholder="+234 806 536 1172"
                 />
               </div>
             </div>
