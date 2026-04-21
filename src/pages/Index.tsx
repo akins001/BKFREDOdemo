@@ -249,5 +249,8 @@ const Index = () => {
           </ScrollReveal>
         </div>
       </section>
+    </div>
+  );
+};
 
 export default Index;
