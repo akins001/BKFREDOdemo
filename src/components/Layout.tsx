@@ -3,9 +3,11 @@ import Footer from "./Footer";
 import WhatsAppButton from "./WhatsAppButton";
 import ScrollProgress from "./ScrollProgress";
 import ScrollToTop from "./ScrollToTop";
+import AppLoader from "./AppLoader";
 
 const Layout = ({ children }: { children: React.ReactNode }) => (
   <div className="min-h-screen flex flex-col">
+    <AppLoader />
     <ScrollToTop />
     <ScrollProgress />
     <Navbar />
