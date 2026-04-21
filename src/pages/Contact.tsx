@@ -87,7 +87,7 @@ const Contact = () => {
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
                   className="w-full border border-input rounded px-4 py-3 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                  placeholder="+234 XXX XXX XXXX"
+                  placeholder="+234 806 536 1172"
                 />
               </div>
             </div>
