@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Shield, Truck, Award, Star, Quote } from "lucide-react";
 import { useState } from "react";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import heroImg from "@/assets/hero-showroom.jpg";
 import doorsImg from "@/assets/doors-collection.jpg";
 import tilesImg from "@/assets/tiles-collection.jpg";
@@ -8,6 +9,7 @@ import galleryDoor from "@/assets/gallery-door1.jpg";
 import galleryFloor from "@/assets/gallery-floor1.jpg";
 import galleryWall from "@/assets/gallery-wall1.jpg";
 import galleryNonslip from "@/assets/gallery-nonslip1.jpg";
+import ScrollReveal from "@/components/ScrollReveal";
 
 const stats = [
   { value: "500+", label: "Projects Completed" },
@@ -40,19 +42,39 @@ const testimonials = [
 
 const Index = () => {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const { scrollY } = useScroll();
+  const heroY = useTransform(scrollY, [0, 600], [0, 150]);
+  const heroOpacity = useTransform(scrollY, [0, 500], [1, 0]);
 
   return (
     <div>
       {/* Hero */}
-      <section className="relative h-[90vh] min-h-[600px] flex items-center">
-        <img src={heroImg} alt="B.K FRED O premium doors and tiles" className="absolute inset-0 w-full h-full object-cover" width={1920} height={1080} />
+      <section className="relative h-[90vh] min-h-[600px] flex items-center overflow-hidden">
+        <motion.img
+          src={heroImg}
+          alt="B.K FRED O premium doors and tiles"
+          className="absolute inset-0 w-full h-full object-cover scale-110"
+          width={1920}
+          height={1080}
+          style={{ y: heroY }}
+        />
         <div className="absolute inset-0" style={{ background: "var(--hero-overlay)" }} />
-        <div className="relative container-custom text-center">
-          <div className="max-w-3xl mx-auto animate-fade-in-up">
+        <motion.div className="relative container-custom text-center" style={{ opacity: heroOpacity }}>
+          <motion.div
+            className="max-w-3xl mx-auto"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          >
             <h1 className="text-4xl md:text-6xl font-heading font-extrabold text-section-dark-foreground leading-tight mb-6">
               Welcome to <span className="text-gradient">B.K FRED O</span> Building Construction
             </h1>
-            <div className="w-20 h-1 bg-primary mx-auto mb-6" />
+            <motion.div
+              className="w-20 h-1 bg-primary mx-auto mb-6"
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            />
             <p className="text-section-dark-foreground/80 text-lg mb-8 max-w-2xl mx-auto">
               We offer premium home solutions, including Turkish doors and beautiful tiles, to bring your architectural and design vision to life. Our skilled construction management team ensures stylish and durable spaces for your dream home.
             </p>
@@ -64,8 +86,8 @@ const Index = () => {
                 Contact Us
               </Link>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* Stats */}
