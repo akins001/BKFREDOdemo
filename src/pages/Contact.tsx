@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import ScrollReveal from "@/components/ScrollReveal";
 
 const contactInfo = [
   { icon: Phone, label: "Phone", value: "+234 XXX XXX XXXX", href: "tel:+234XXXXXXXX" },
@@ -23,14 +24,16 @@ const Contact = () => {
     <div>
       <section className="bg-section-dark section-padding text-center">
         <div className="container-custom">
-          <p className="text-primary font-semibold tracking-widest uppercase text-sm mb-2">Get In Touch</p>
-          <h1 className="text-4xl md:text-5xl font-heading font-extrabold text-section-dark-foreground">Contact Us</h1>
+          <ScrollReveal>
+            <p className="text-primary font-semibold tracking-widest uppercase text-sm mb-2">Get In Touch</p>
+            <h1 className="text-4xl md:text-5xl font-heading font-extrabold text-section-dark-foreground">Contact Us</h1>
+          </ScrollReveal>
         </div>
       </section>
 
       <section className="section-padding bg-background">
         <div className="container-custom grid md:grid-cols-2 gap-12">
-          <div>
+          <ScrollReveal direction="right">
             <h2 className="text-2xl font-heading font-bold text-foreground mb-6">Let's Discuss Your Project</h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
               Whether you're renovating, building a new home, or looking for premium Turkish doors and quality tiles, our team is ready to help you bring your vision to life.
@@ -52,9 +55,10 @@ const Contact = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </ScrollReveal>
 
-          <form onSubmit={handleSubmit} className="bg-card border border-border rounded-lg p-8 space-y-5">
+          <ScrollReveal direction="left" delay={0.15}>
+            <form onSubmit={handleSubmit} className="bg-card border border-border rounded-lg p-8 space-y-5">
             <div>
               <label className="block text-sm font-medium text-foreground mb-1.5">Full Name</label>
               <input
