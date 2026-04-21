@@ -105,7 +105,8 @@ const Contact = () => {
             <button type="submit" className="w-full gradient-primary text-primary-foreground py-3.5 rounded font-semibold text-sm hover:opacity-90 transition-opacity">
               Send Message
             </button>
-          </form>
+            </form>
+          </ScrollReveal>
         </div>
       </section>
     </div>
