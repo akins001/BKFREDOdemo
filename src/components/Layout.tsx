@@ -6,7 +6,7 @@ import ScrollToTop from "./ScrollToTop";
 import AppLoader from "./AppLoader";
 
 const Layout = ({ children }: { children: React.ReactNode }) => (
-  <div className="min-h-screen flex flex-col p-1 md:p-1.5 bg-background">
+  <div className="min-h-screen flex flex-col">
     <AppLoader />
     <ScrollToTop />
     <ScrollProgress />
