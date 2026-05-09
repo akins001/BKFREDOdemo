@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Phone } from "lucide-react";
+import { Phone, BookOpen } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 const navItems = [
@@ -35,6 +35,15 @@ const Navbar = () => {
               {item.label}
             </Link>
           ))}
+          <a
+            href="https://bkfredo.com.ng"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-medium tracking-wide text-section-dark-foreground/80 hover:text-primary transition-colors flex items-center gap-1.5"
+          >
+            <BookOpen className="w-4 h-4" />
+            BLOG
+          </a>
           <a
             href="tel:+2348065361172"
             className="gradient-primary text-primary-foreground px-5 py-2.5 rounded text-sm font-semibold flex items-center gap-2 hover:opacity-90 transition-opacity"
