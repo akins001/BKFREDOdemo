@@ -113,6 +113,19 @@ const Navbar = () => {
                   </Link>
                 </motion.div>
               ))}
+              <motion.a
+                href="https://bkfredo.com.ng"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setOpen(false)}
+                initial={{ opacity: 0, x: -12 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.05 + navItems.length * 0.04, duration: 0.25, ease: "easeOut" }}
+                className="px-6 py-3 text-sm font-medium text-section-dark-foreground/80 hover:text-primary transition-colors flex items-center gap-2"
+              >
+                <BookOpen className="w-4 h-4" />
+                BLOG
+              </motion.a>
             </div>
           </motion.div>
         )}
