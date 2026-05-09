@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Shield, Truck, Award, Star, Quote } from "lucide-react";
+import { ArrowRight, Shield, Truck, Award, Star, Quote, BookOpen } from "lucide-react";
 import { useState } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import heroImg from "@/assets/hero-showroom.jpg";
@@ -85,6 +85,18 @@ const Index = () => {
               <Link to="/contact" className="border border-primary text-primary px-8 py-3.5 rounded font-semibold text-sm hover:bg-primary/10 transition-colors">
                 Contact Us
               </Link>
+            </div>
+            {/* Mobile-only Visit Blog button */}
+            <div className="md:hidden mt-4 flex justify-center">
+              <a
+                href="https://bkfredo.com.ng"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-section-dark-foreground/10 backdrop-blur-sm border border-primary/40 text-section-dark-foreground px-8 py-3 rounded font-semibold text-sm hover:bg-primary/20 hover:border-primary transition-colors flex items-center gap-2"
+              >
+                <BookOpen className="w-4 h-4" />
+                Visit Our Blog
+              </a>
             </div>
           </motion.div>
         </motion.div>
