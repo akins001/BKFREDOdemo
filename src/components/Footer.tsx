@@ -77,7 +77,7 @@ const Footer = () => (
       </div>
 
       <div className="border-t border-section-dark-foreground/10 mt-10 pt-6 text-center text-sm text-section-dark-foreground/50">
-        © {new Date().getFullYear()} B.K FRED O Building Construction. All rights reserved.
+        © {new Date().getFullYear()} esevee. All rights reserved.
       </div>
     </div>
   </footer>
