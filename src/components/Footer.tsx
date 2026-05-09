@@ -15,7 +15,7 @@ const Footer = () => (
           <div className="flex items-center gap-3 mb-4">
             <img src={logo} alt="B.K FRED O Building Construction logo" className="w-12 h-12 object-contain" width={48} height={48} />
             <h3 className="text-xl font-heading font-bold">
-              esevee<span className="text-primary">.</span>
+              B.K FRED O<span className="text-primary">.</span>
             </h3>
           </div>
           <p className="text-section-dark-foreground/70 text-sm leading-relaxed mb-4">
