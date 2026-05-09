@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Phone, BookOpen } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import logo from "@/assets/logo.png";
 
 const navItems = [
   { label: "HOME", path: "/" },
@@ -18,8 +19,9 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-section-dark/95 backdrop-blur-md border-b border-section-dark">
       <div className="container-custom flex items-center justify-between h-16 md:h-20 px-4 md:px-6">
-        <Link to="/" className="font-heading font-bold text-xl md:text-2xl text-section-dark-foreground tracking-wider">
-          B.K FRED O<span className="text-primary">.</span>
+        <Link to="/" className="flex items-center gap-2 font-heading font-bold text-xl md:text-2xl text-section-dark-foreground tracking-wider">
+          <img src={logo} alt="B.K FRED O logo" className="w-9 h-9 md:w-10 md:h-10 object-contain" width={40} height={40} />
+          <span>B.K FRED O<span className="text-primary">.</span></span>
         </Link>
 
         {/* Desktop */}
