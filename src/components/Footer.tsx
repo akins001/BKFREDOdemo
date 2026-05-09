@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin } from "lucide-react";
+import logo from "@/assets/logo.png";
 
 const PHONE_DISPLAY = "+234 806 536 1172";
 const PHONE_TEL = "+2348065361172";
@@ -11,9 +12,12 @@ const Footer = () => (
     <div className="container-custom section-padding">
       <div className="grid md:grid-cols-4 gap-10">
         <div>
-          <h3 className="text-xl font-heading font-bold mb-4">
-            B.K FRED O<span className="text-primary">.</span>
-          </h3>
+          <div className="flex items-center gap-3 mb-4">
+            <img src={logo} alt="B.K FRED O Building Construction logo" className="w-12 h-12 object-contain" width={48} height={48} />
+            <h3 className="text-xl font-heading font-bold">
+              B.K FRED O<span className="text-primary">.</span>
+            </h3>
+          </div>
           <p className="text-section-dark-foreground/70 text-sm leading-relaxed mb-4">
             Premium Turkish doors and quality tiles for residential and commercial projects. Building excellence with every project.
           </p>
