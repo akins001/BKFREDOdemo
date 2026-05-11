@@ -1,5 +1,13 @@
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin } from "lucide-react";
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaYoutube,
+  FaPinterest,
+} from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+
 import logo from "@/assets/logo.png";
 
 const PHONE_DISPLAY = "+234 806 536 1172";
@@ -12,6 +20,7 @@ const Footer = () => (
   <footer className="bg-section-dark text-section-dark-foreground">
     <div className="container-custom section-padding">
       <div className="grid md:grid-cols-4 gap-10">
+
         {/* BRAND SECTION */}
         <div>
           <div className="flex items-center gap-3 mb-4">
@@ -34,15 +43,15 @@ const Footer = () => (
 
           {/* SOCIAL ICONS */}
           <div className="flex items-center gap-3 flex-wrap">
-            {/* Pinterest (existing) */}
+
+            {/* Pinterest */}
             <a
               href="https://www.pinterest.com/bbuildingconstructioncompanylt/"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Pinterest"
-              className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-section-dark-foreground/10 hover:bg-primary hover:text-primary-foreground transition-colors"
+              className="w-9 h-9 flex items-center justify-center rounded-full bg-section-dark-foreground/10 hover:bg-primary hover:text-white transition"
             >
-              <i className="fab fa-pinterest"></i>
+              <FaPinterest />
             </a>
 
             {/* Facebook */}
@@ -50,10 +59,9 @@ const Footer = () => (
               href="https://web.facebook.com/p/BK-Fred-O-Building-Construction-Company-100095204186934/?_rdc=1&_rdr"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Facebook"
-              className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-section-dark-foreground/10 hover:bg-primary hover:text-primary-foreground transition-colors"
+              className="w-9 h-9 flex items-center justify-center rounded-full bg-section-dark-foreground/10 hover:bg-primary hover:text-white transition"
             >
-              <i className="fab fa-facebook-f"></i>
+              <FaFacebookF />
             </a>
 
             {/* Instagram */}
@@ -61,21 +69,19 @@ const Footer = () => (
               href="https://www.instagram.com/b.k.fred.o/"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Instagram"
-              className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-section-dark-foreground/10 hover:bg-primary hover:text-primary-foreground transition-colors"
+              className="w-9 h-9 flex items-center justify-center rounded-full bg-section-dark-foreground/10 hover:bg-primary hover:text-white transition"
             >
-              <i className="fab fa-instagram"></i>
+              <FaInstagram />
             </a>
 
-            {/* X (Twitter) */}
+            {/* X */}
             <a
               href="https://x.com/bkfredo1?t=3o58AO1uwOGzd_wqFxQSvg&s=09"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="X"
-              className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-section-dark-foreground/10 hover:bg-primary hover:text-primary-foreground transition-colors"
+              className="w-9 h-9 flex items-center justify-center rounded-full bg-section-dark-foreground/10 hover:bg-primary hover:text-white transition"
             >
-              <i className="fab fa-x-twitter"></i>
+              <FaXTwitter />
             </a>
 
             {/* YouTube */}
@@ -83,10 +89,9 @@ const Footer = () => (
               href="https://www.youtube.com/@B.KFredo?si=F8gDI4xoexJIGXUW"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="YouTube"
-              className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-section-dark-foreground/10 hover:bg-primary hover:text-primary-foreground transition-colors"
+              className="w-9 h-9 flex items-center justify-center rounded-full bg-section-dark-foreground/10 hover:bg-primary hover:text-white transition"
             >
-              <i className="fab fa-youtube"></i>
+              <FaYoutube />
             </a>
           </div>
         </div>
@@ -134,7 +139,7 @@ const Footer = () => (
               href={`tel:${PHONE_TEL}`}
               className="flex items-center gap-2 hover:text-primary transition-colors"
             >
-              <Phone className="w-4 h-4 text-primary shrink-0" />
+              <Phone className="w-4 h-4 text-primary" />
               {PHONE_DISPLAY}
             </a>
 
@@ -142,12 +147,12 @@ const Footer = () => (
               href={`mailto:${EMAIL}`}
               className="flex items-center gap-2 hover:text-primary transition-colors break-all"
             >
-              <Mail className="w-4 h-4 text-primary shrink-0" />
+              <Mail className="w-4 h-4 text-primary" />
               {EMAIL}
             </a>
 
             <p className="flex items-start gap-2">
-              <MapPin className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+              <MapPin className="w-4 h-4 text-primary mt-0.5" />
               {ADDRESS}
             </p>
           </div>
