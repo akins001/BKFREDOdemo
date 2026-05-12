@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ExternalLink } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
 import galleryDoor from "@/assets/gallery-door1.jpg";
 import galleryFloor from "@/assets/gallery-floor1.jpg";
 import galleryWall from "@/assets/gallery-wall1.jpg";
@@ -17,23 +18,47 @@ type Category = "All" | "Turkish Doors" | "Floor Tiles" | "Wall Tiles" | "Non-Sl
 
 const categories: Category[] = ["All", "Turkish Doors", "Floor Tiles", "Wall Tiles", "Non-Slip Tiles"];
 
-const galleryItems = [
-  { img: galleryDoor, title: "Cast Door", category: "Turkish Doors" as Category },
-  { img: galleryFloor, title: "Floor Tile", category: "Floor Tiles" as Category, desc: "60x60" },
-  { img: galleryWall, title: "Wall Tile", category: "Wall Tiles" as Category, desc: "30x60 Wall tiles" },
-  { img: galleryNonslip, title: "Non-Slip Tile", category: "Non-Slip Tiles" as Category },
-  { img: doorsImg, title: "Turkish Luxury Door", category: "Turkish Doors" as Category },
-  { img: tilesImg, title: "Floor Tile", category: "Floor Tiles" as Category, desc: "40x40" },
-  { img: bathroomImg, title: "Wall Tile", category: "Wall Tiles" as Category, desc: "Outdoor wall tiles" },
-  { img: kitchenImg, title: "Non-Slip Tile", category: "Non-Slip Tiles" as Category, desc: "Spanish wooden tiles" },
-  { img: officeImg, title: "Marble Glass Door", category: "Turkish Doors" as Category },
-  { img: heroImg, title: "Floor Tile", category: "Floor Tiles" as Category, desc: "Vitrified 40x40" },
-  { img: galleryDoor, title: "Pivot Door with Smart Lock", category: "Turkish Doors" as Category },
-  { img: galleryFloor, title: "Floor Tile", category: "Floor Tiles" as Category, desc: "60x120" },
+type GalleryItem = { img: string; title: string; category: Category; desc?: string };
+
+const baseGalleryItems: GalleryItem[] = [
+  { img: galleryDoor, title: "Cast Door", category: "Turkish Doors" },
+  { img: galleryFloor, title: "Floor Tile", category: "Floor Tiles", desc: "60x60" },
+  { img: galleryWall, title: "Wall Tile", category: "Wall Tiles", desc: "30x60 Wall tiles" },
+  { img: galleryNonslip, title: "Non-Slip Tile", category: "Non-Slip Tiles" },
+  { img: doorsImg, title: "Turkish Luxury Door", category: "Turkish Doors" },
+  { img: tilesImg, title: "Floor Tile", category: "Floor Tiles", desc: "40x40" },
+  { img: bathroomImg, title: "Wall Tile", category: "Wall Tiles", desc: "Outdoor wall tiles" },
+  { img: kitchenImg, title: "Non-Slip Tile", category: "Non-Slip Tiles", desc: "Spanish wooden tiles" },
+  { img: officeImg, title: "Marble Glass Door", category: "Turkish Doors" },
+  { img: heroImg, title: "Floor Tile", category: "Floor Tiles", desc: "Vitrified 40x40" },
+  { img: galleryDoor, title: "Pivot Door with Smart Lock", category: "Turkish Doors" },
+  { img: galleryFloor, title: "Floor Tile", category: "Floor Tiles", desc: "60x120" },
 ];
 
 const Projects = () => {
   const [active, setActive] = useState<Category>("All");
+  const [uploaded, setUploaded] = useState<GalleryItem[]>([]);
+
+  useEffect(() => {
+    supabase
+      .from("gallery_images")
+      .select("title, category, description, image_url")
+      .order("created_at", { ascending: false })
+      .then(({ data }) => {
+        if (data) {
+          setUploaded(
+            data.map((d) => ({
+              img: d.image_url,
+              title: d.title,
+              category: d.category as Category,
+              desc: d.description ?? undefined,
+            })),
+          );
+        }
+      });
+  }, []);
+
+  const galleryItems = [...uploaded, ...baseGalleryItems];
 
   const filtered = active === "All" ? galleryItems : galleryItems.filter((item) => item.category === active);
 
