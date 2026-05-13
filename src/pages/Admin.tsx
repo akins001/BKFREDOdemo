@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Loader2, Trash2, Upload, LogOut } from "lucide-react";
+import { Loader2, Trash2, Upload, LogOut, Pencil } from "lucide-react";
 
 const CATEGORIES = ["Turkish Doors", "Floor Tiles", "Wall Tiles", "Non-Slip Tiles"] as const;
 type Category = typeof CATEGORIES[number];
@@ -38,6 +39,71 @@ const Admin = () => {
 
   const [items, setItems] = useState<GalleryRow[]>([]);
   const [loadingItems, setLoadingItems] = useState(false);
+
+  // Edit dialog
+  const [editing, setEditing] = useState<GalleryRow | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editCategory, setEditCategory] = useState<Category>("Turkish Doors");
+  const [editDescription, setEditDescription] = useState("");
+  const [editFile, setEditFile] = useState<File | null>(null);
+  const [savingEdit, setSavingEdit] = useState(false);
+
+  const openEdit = (item: GalleryRow) => {
+    setEditing(item);
+    setEditTitle(item.title);
+    setEditCategory((CATEGORIES as readonly string[]).includes(item.category) ? (item.category as Category) : "Turkish Doors");
+    setEditDescription(item.description ?? "");
+    setEditFile(null);
+  };
+
+  const handleSaveEdit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editing) return;
+    if (!editTitle.trim()) {
+      toast.error("Title is required");
+      return;
+    }
+    setSavingEdit(true);
+    try {
+      let image_url = editing.image_url;
+      let storage_path = editing.storage_path;
+
+      if (editFile) {
+        const ext = editFile.name.split(".").pop() || "jpg";
+        const path = `${editCategory.replace(/\s+/g, "-").toLowerCase()}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+        const { error: upErr } = await supabase.storage.from("gallery").upload(path, editFile, {
+          contentType: editFile.type,
+          upsert: false,
+        });
+        if (upErr) throw upErr;
+        const { data: pub } = supabase.storage.from("gallery").getPublicUrl(path);
+        // remove old file
+        await supabase.storage.from("gallery").remove([editing.storage_path]);
+        image_url = pub.publicUrl;
+        storage_path = path;
+      }
+
+      const { error } = await supabase
+        .from("gallery_images")
+        .update({
+          title: editTitle.trim(),
+          category: editCategory,
+          description: editDescription.trim() || null,
+          image_url,
+          storage_path,
+        })
+        .eq("id", editing.id);
+      if (error) throw error;
+
+      toast.success("Updated");
+      setEditing(null);
+      loadItems();
+    } catch (err: any) {
+      toast.error(err.message ?? "Update failed");
+    } finally {
+      setSavingEdit(false);
+    }
+  };
 
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
@@ -263,9 +329,14 @@ const Admin = () => {
                 <p className="text-xs text-primary font-semibold uppercase tracking-wider">{item.category}</p>
                 <p className="font-semibold text-sm mt-1 line-clamp-1">{item.title}</p>
                 {item.description && <p className="text-xs text-muted-foreground line-clamp-1">{item.description}</p>}
-                <Button variant="destructive" size="sm" className="mt-3 w-full" onClick={() => handleDelete(item)}>
-                  <Trash2 className="w-4 h-4 mr-1" /> Delete
-                </Button>
+                <div className="flex gap-2 mt-3">
+                  <Button variant="outline" size="sm" className="flex-1" onClick={() => openEdit(item)}>
+                    <Pencil className="w-4 h-4 mr-1" /> Edit
+                  </Button>
+                  <Button variant="destructive" size="sm" className="flex-1" onClick={() => handleDelete(item)}>
+                    <Trash2 className="w-4 h-4 mr-1" /> Delete
+                  </Button>
+                </div>
               </div>
             </Card>
           ))}
