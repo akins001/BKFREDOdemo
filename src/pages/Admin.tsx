@@ -25,7 +25,7 @@ const Admin = () => {
   const [checking, setChecking] = useState(true);
 
   // Login form
-  const [email, setEmail] = useState("admin@bkfredo.com");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loggingIn, setLoggingIn] = useState(false);
 
@@ -172,7 +172,7 @@ const Admin = () => {
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" autoComplete="email" required />
               </div>
               <div>
                 <Label htmlFor="password">Password</Label>
