@@ -119,7 +119,37 @@ const Admin = () => {
       if (data.session?.user) checkAdmin(data.session.user.id);
       else setChecking(false);
     });
-    return () => sub.subscription.unsubscribe();
+
+    // Auto sign-out on tab/window close so each session requires fresh login
+    const signOutOnUnload = () => {
+      try {
+        // Clear Supabase auth keys synchronously so refresh tokens don't survive
+        Object.keys(localStorage)
+          .filter((k) => k.startsWith("sb-") && k.endsWith("-auth-token"))
+          .forEach((k) => localStorage.removeItem(k));
+      } catch {}
+    };
+    window.addEventListener("beforeunload", signOutOnUnload);
+
+    // Inactivity auto-logout after 15 minutes
+    let inactivityTimer: number | undefined;
+    const resetInactivity = () => {
+      if (inactivityTimer) window.clearTimeout(inactivityTimer);
+      inactivityTimer = window.setTimeout(() => {
+        supabase.auth.signOut();
+        toast.message("Signed out due to inactivity");
+      }, 15 * 60 * 1000);
+    };
+    const activityEvents = ["mousemove", "keydown", "click", "scroll", "touchstart"];
+    activityEvents.forEach((e) => window.addEventListener(e, resetInactivity));
+    resetInactivity();
+
+    return () => {
+      sub.subscription.unsubscribe();
+      window.removeEventListener("beforeunload", signOutOnUnload);
+      activityEvents.forEach((e) => window.removeEventListener(e, resetInactivity));
+      if (inactivityTimer) window.clearTimeout(inactivityTimer);
+    };
   }, []);
 
   const checkAdmin = async (userId: string) => {
