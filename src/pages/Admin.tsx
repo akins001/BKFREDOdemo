@@ -342,6 +342,56 @@ const Admin = () => {
           ))}
         </div>
       )}
+
+      <Dialog open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Edit image</DialogTitle>
+          </DialogHeader>
+          {editing && (
+            <form onSubmit={handleSaveEdit} className="space-y-4">
+              <img src={editing.image_url} alt={editing.title} className="w-full h-40 object-cover rounded" />
+              <div>
+                <Label htmlFor="edit-file">Replace image (optional)</Label>
+                <Input
+                  id="edit-file"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setEditFile(e.target.files?.[0] ?? null)}
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-title">Title</Label>
+                <Input id="edit-title" value={editTitle} onChange={(e) => setEditTitle(e.target.value)} maxLength={120} required />
+              </div>
+              <div>
+                <Label htmlFor="edit-category">Category</Label>
+                <select
+                  id="edit-category"
+                  value={editCategory}
+                  onChange={(e) => setEditCategory(e.target.value as Category)}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                >
+                  {CATEGORIES.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <Label htmlFor="edit-desc">Description</Label>
+                <Input id="edit-desc" value={editDescription} onChange={(e) => setEditDescription(e.target.value)} maxLength={200} />
+              </div>
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={() => setEditing(null)}>Cancel</Button>
+                <Button type="submit" disabled={savingEdit}>
+                  {savingEdit && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                  Save changes
+                </Button>
+              </DialogFooter>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
