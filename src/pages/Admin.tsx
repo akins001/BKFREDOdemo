@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Loader2, Trash2, Upload, LogOut } from "lucide-react";
+import { Loader2, Trash2, Upload, LogOut, Pencil } from "lucide-react";
 
 const CATEGORIES = ["Turkish Doors", "Floor Tiles", "Wall Tiles", "Non-Slip Tiles"] as const;
 type Category = typeof CATEGORIES[number];
@@ -25,7 +26,7 @@ const Admin = () => {
   const [checking, setChecking] = useState(true);
 
   // Login form
-  const [email, setEmail] = useState("admin@bkfredo.com");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loggingIn, setLoggingIn] = useState(false);
 
@@ -38,6 +39,71 @@ const Admin = () => {
 
   const [items, setItems] = useState<GalleryRow[]>([]);
   const [loadingItems, setLoadingItems] = useState(false);
+
+  // Edit dialog
+  const [editing, setEditing] = useState<GalleryRow | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editCategory, setEditCategory] = useState<Category>("Turkish Doors");
+  const [editDescription, setEditDescription] = useState("");
+  const [editFile, setEditFile] = useState<File | null>(null);
+  const [savingEdit, setSavingEdit] = useState(false);
+
+  const openEdit = (item: GalleryRow) => {
+    setEditing(item);
+    setEditTitle(item.title);
+    setEditCategory((CATEGORIES as readonly string[]).includes(item.category) ? (item.category as Category) : "Turkish Doors");
+    setEditDescription(item.description ?? "");
+    setEditFile(null);
+  };
+
+  const handleSaveEdit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editing) return;
+    if (!editTitle.trim()) {
+      toast.error("Title is required");
+      return;
+    }
+    setSavingEdit(true);
+    try {
+      let image_url = editing.image_url;
+      let storage_path = editing.storage_path;
+
+      if (editFile) {
+        const ext = editFile.name.split(".").pop() || "jpg";
+        const path = `${editCategory.replace(/\s+/g, "-").toLowerCase()}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+        const { error: upErr } = await supabase.storage.from("gallery").upload(path, editFile, {
+          contentType: editFile.type,
+          upsert: false,
+        });
+        if (upErr) throw upErr;
+        const { data: pub } = supabase.storage.from("gallery").getPublicUrl(path);
+        // remove old file
+        await supabase.storage.from("gallery").remove([editing.storage_path]);
+        image_url = pub.publicUrl;
+        storage_path = path;
+      }
+
+      const { error } = await supabase
+        .from("gallery_images")
+        .update({
+          title: editTitle.trim(),
+          category: editCategory,
+          description: editDescription.trim() || null,
+          image_url,
+          storage_path,
+        })
+        .eq("id", editing.id);
+      if (error) throw error;
+
+      toast.success("Updated");
+      setEditing(null);
+      loadItems();
+    } catch (err: any) {
+      toast.error(err.message ?? "Update failed");
+    } finally {
+      setSavingEdit(false);
+    }
+  };
 
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
@@ -172,7 +238,7 @@ const Admin = () => {
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" autoComplete="email" required />
               </div>
               <div>
                 <Label htmlFor="password">Password</Label>
@@ -263,14 +329,69 @@ const Admin = () => {
                 <p className="text-xs text-primary font-semibold uppercase tracking-wider">{item.category}</p>
                 <p className="font-semibold text-sm mt-1 line-clamp-1">{item.title}</p>
                 {item.description && <p className="text-xs text-muted-foreground line-clamp-1">{item.description}</p>}
-                <Button variant="destructive" size="sm" className="mt-3 w-full" onClick={() => handleDelete(item)}>
-                  <Trash2 className="w-4 h-4 mr-1" /> Delete
-                </Button>
+                <div className="flex gap-2 mt-3">
+                  <Button variant="outline" size="sm" className="flex-1" onClick={() => openEdit(item)}>
+                    <Pencil className="w-4 h-4 mr-1" /> Edit
+                  </Button>
+                  <Button variant="destructive" size="sm" className="flex-1" onClick={() => handleDelete(item)}>
+                    <Trash2 className="w-4 h-4 mr-1" /> Delete
+                  </Button>
+                </div>
               </div>
             </Card>
           ))}
         </div>
       )}
+
+      <Dialog open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Edit image</DialogTitle>
+          </DialogHeader>
+          {editing && (
+            <form onSubmit={handleSaveEdit} className="space-y-4">
+              <img src={editing.image_url} alt={editing.title} className="w-full h-40 object-cover rounded" />
+              <div>
+                <Label htmlFor="edit-file">Replace image (optional)</Label>
+                <Input
+                  id="edit-file"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setEditFile(e.target.files?.[0] ?? null)}
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-title">Title</Label>
+                <Input id="edit-title" value={editTitle} onChange={(e) => setEditTitle(e.target.value)} maxLength={120} required />
+              </div>
+              <div>
+                <Label htmlFor="edit-category">Category</Label>
+                <select
+                  id="edit-category"
+                  value={editCategory}
+                  onChange={(e) => setEditCategory(e.target.value as Category)}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                >
+                  {CATEGORIES.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <Label htmlFor="edit-desc">Description</Label>
+                <Input id="edit-desc" value={editDescription} onChange={(e) => setEditDescription(e.target.value)} maxLength={200} />
+              </div>
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={() => setEditing(null)}>Cancel</Button>
+                <Button type="submit" disabled={savingEdit}>
+                  {savingEdit && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                  Save changes
+                </Button>
+              </DialogFooter>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
