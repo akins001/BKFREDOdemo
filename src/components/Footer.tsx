@@ -162,9 +162,10 @@ const Footer = () => (
       {/* FOOTER BOTTOM */}
       <div className="border-t border-section-dark-foreground/10 mt-10 pt-6 text-center text-sm text-section-dark-foreground/50">
         © {new Date().getFullYear()} esevee. All rights reserved.
+         <a href="/admin" className="hover:text-accent">Admin</a>
       </div>
     </div>
-    <a href="/admin" className="hover:text-accent">Admin</a>
+   
   </footer>
 );
 
