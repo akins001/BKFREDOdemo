@@ -164,6 +164,7 @@ const Footer = () => (
         © {new Date().getFullYear()} esevee. All rights reserved.
       </div>
     </div>
+    <a href="/admin" className="hover:text-accent">Admin</a>
   </footer>
 );
 
