@@ -7,7 +7,13 @@ import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Loader2, Trash2, Upload, LogOut } from "lucide-react";
 
-const CATEGORIES = ["Turkish Doors", "Floor Tiles", "Wall Tiles", "Non-Slip Tiles"] as const;
+const CATEGORIES = [
+  "Turkish Doors",
+  "Floor Tiles",
+  "Wall Tiles",
+  "Non-Slip Tiles",
+] as const;
+
 type Category = typeof CATEGORIES[number];
 
 type GalleryRow = {
@@ -24,17 +30,24 @@ const Admin = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [checking, setChecking] = useState(true);
 
-  // Login form
-  const [email, setEmail] = useState("admin@bkfredo.com");
+  // auth
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loggingIn, setLoggingIn] = useState(false);
 
-  // Upload form
+  // upload
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState<Category>("Turkish Doors");
   const [description, setDescription] = useState("");
   const [uploading, setUploading] = useState(false);
+
+  // edit (FIXED)
+  const [editItemId, setEditItemId] = useState<string | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editCategory, setEditCategory] =
+    useState<Category>("Turkish Doors");
+  const [editDescription, setEditDescription] = useState("");
 
   const [items, setItems] = useState<GalleryRow[]>([]);
   const [loadingItems, setLoadingItems] = useState(false);
@@ -48,43 +61,57 @@ const Admin = () => {
         setChecking(false);
       }
     });
+
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
       if (data.session?.user) checkAdmin(data.session.user.id);
       else setChecking(false);
     });
+
     return () => sub.subscription.unsubscribe();
   }, []);
 
   const checkAdmin = async (userId: string) => {
     setChecking(true);
+
     const { data } = await supabase
       .from("user_roles")
       .select("role")
       .eq("user_id", userId)
       .eq("role", "admin")
       .maybeSingle();
+
     setIsAdmin(!!data);
     setChecking(false);
+
     if (data) loadItems();
   };
 
   const loadItems = async () => {
     setLoadingItems(true);
+
     const { data, error } = await supabase
       .from("gallery_images")
       .select("*")
       .order("created_at", { ascending: false });
+
     if (error) toast.error(error.message);
     else setItems(data as GalleryRow[]);
+
     setLoadingItems(false);
   };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoggingIn(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
     setLoggingIn(false);
+
     if (error) toast.error(error.message);
     else toast.success("Signed in");
   };
@@ -96,50 +123,101 @@ const Admin = () => {
 
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!file || !title.trim()) {
-      toast.error("Image and title are required");
+      toast.error("Image and title required");
       return;
     }
+
     setUploading(true);
+
     try {
       const ext = file.name.split(".").pop() || "jpg";
-      const path = `${category.replace(/\s+/g, "-").toLowerCase()}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const path = `${category
+        .replace(/\s+/g, "-")
+        .toLowerCase()}/${Date.now()}-${Math.random()
+        .toString(36)
+        .slice(2, 8)}.${ext}`;
 
-      const { error: upErr } = await supabase.storage.from("gallery").upload(path, file, {
-        contentType: file.type,
-        upsert: false,
-      });
+      const { error: upErr } = await supabase.storage
+        .from("gallery")
+        .upload(path, file);
+
       if (upErr) throw upErr;
 
-      const { data: pub } = supabase.storage.from("gallery").getPublicUrl(path);
+      const { data: pub } = supabase.storage
+        .from("gallery")
+        .getPublicUrl(path);
 
-      const { error: insErr } = await supabase.from("gallery_images").insert({
-        title: title.trim(),
-        category,
-        description: description.trim() || null,
-        image_url: pub.publicUrl,
-        storage_path: path,
-      });
+      const { error: insErr } = await supabase
+        .from("gallery_images")
+        .insert({
+          title: title.trim(),
+          category,
+          description: description.trim() || null,
+          image_url: pub.publicUrl,
+          storage_path: path,
+        });
+
       if (insErr) throw insErr;
 
-      toast.success("Image uploaded");
+      toast.success("Uploaded");
+
       setFile(null);
       setTitle("");
       setDescription("");
-      (document.getElementById("file-input") as HTMLInputElement).value = "";
+      (document.getElementById("file-input") as HTMLInputElement).value =
+        "";
+
       loadItems();
     } catch (err: any) {
-      toast.error(err.message ?? "Upload failed");
+      toast.error(err.message);
     } finally {
       setUploading(false);
     }
   };
 
+  // EDIT START
+  const startEdit = (item: GalleryRow) => {
+    setEditItemId(item.id);
+    setEditTitle(item.title);
+    setEditCategory(item.category as Category);
+    setEditDescription(item.description ?? "");
+  };
+
+  // EDIT SAVE
+  const saveEdit = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from("gallery_images")
+        .update({
+          title: editTitle.trim(),
+          category: editCategory,
+          description: editDescription.trim() || null,
+        })
+        .eq("id", id);
+
+      if (error) throw error;
+
+      toast.success("Updated");
+
+      setEditItemId(null);
+      loadItems();
+    } catch (err: any) {
+      toast.error(err.message);
+    }
+  };
+
   const handleDelete = async (item: GalleryRow) => {
     if (!confirm(`Delete "${item.title}"?`)) return;
-    const { error: rmErr } = await supabase.storage.from("gallery").remove([item.storage_path]);
-    if (rmErr) toast.error(rmErr.message);
-    const { error } = await supabase.from("gallery_images").delete().eq("id", item.id);
+
+    await supabase.storage.from("gallery").remove([item.storage_path]);
+
+    const { error } = await supabase
+      .from("gallery_images")
+      .delete()
+      .eq("id", item.id);
+
     if (error) toast.error(error.message);
     else {
       toast.success("Deleted");
@@ -159,33 +237,31 @@ const Admin = () => {
     return (
       <div className="container-custom py-16 max-w-md">
         <Card className="p-8">
-          <h1 className="text-2xl font-heading font-bold mb-6">Admin Login</h1>
-          {session && !isAdmin && (
-            <p className="text-sm text-destructive mb-4">
-              Signed in but not an admin.{" "}
-              <button onClick={handleLogout} className="underline">
-                Sign out
-              </button>
-            </p>
-          )}
+          <h1 className="text-2xl font-bold mb-6">Admin Login</h1>
+
           {!session && (
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-              </div>
-              <div>
-                <Label htmlFor="password">Password</Label>
+                <Label>Email</Label>
                 <Input
-                  id="password"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <Label>Password</Label>
+                <Input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  required
                 />
               </div>
-              <Button type="submit" className="w-full" disabled={loggingIn}>
-                {loggingIn && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+
+              <Button disabled={loggingIn} className="w-full">
+                {loggingIn && (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                )}
                 Sign In
               </Button>
             </form>
@@ -197,80 +273,99 @@ const Admin = () => {
 
   return (
     <div className="container-custom py-12">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-heading font-bold">Gallery Admin</h1>
+      <div className="flex justify-between mb-8">
+        <h1 className="text-3xl font-bold">Gallery Admin</h1>
+
         <Button variant="outline" onClick={handleLogout}>
-          <LogOut className="w-4 h-4 mr-2" /> Sign out
+          <LogOut className="w-4 h-4 mr-2" />
+          Sign out
         </Button>
       </div>
 
+      {/* UPLOAD */}
       <Card className="p-6 mb-10">
-        <h2 className="text-xl font-semibold mb-4">Upload new image</h2>
+        <h2 className="text-xl font-semibold mb-4">Upload</h2>
+
         <form onSubmit={handleUpload} className="grid md:grid-cols-2 gap-4">
-          <div className="md:col-span-2">
-            <Label htmlFor="file-input">Image file</Label>
-            <Input
-              id="file-input"
-              type="file"
-              accept="image/*"
-              onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-              required
-            />
-          </div>
-          <div>
-            <Label htmlFor="title">Title</Label>
-            <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} maxLength={120} required />
-          </div>
-          <div>
-            <Label htmlFor="category">Category</Label>
-            <select
-              id="category"
-              value={category}
-              onChange={(e) => setCategory(e.target.value as Category)}
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-            >
-              {CATEGORIES.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="md:col-span-2">
-            <Label htmlFor="desc">Description (optional)</Label>
-            <Input id="desc" value={description} onChange={(e) => setDescription(e.target.value)} maxLength={200} />
-          </div>
-          <div className="md:col-span-2">
-            <Button type="submit" disabled={uploading}>
-              {uploading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Upload className="w-4 h-4 mr-2" />}
-              Upload
-            </Button>
-          </div>
+          <Input
+            id="file-input"
+            type="file"
+            onChange={(e) => setFile(e.target.files?.[0] || null)}
+          />
+
+          <Input
+            placeholder="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value as Category)}
+            className="border p-2"
+          >
+            {CATEGORIES.map((c) => (
+              <option key={c}>{c}</option>
+            ))}
+          </select>
+
+          <Input
+            placeholder="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+
+          <Button disabled={uploading}>
+            {uploading ? (
+              <Loader2 className="w-4 h-4 animate-spin mr-2" />
+            ) : (
+              <Upload className="w-4 h-4 mr-2" />
+            )}
+            Upload
+          </Button>
         </form>
       </Card>
 
-      <h2 className="text-xl font-semibold mb-4">Uploaded images ({items.length})</h2>
-      {loadingItems ? (
-        <Loader2 className="w-6 h-6 animate-spin text-primary" />
-      ) : items.length === 0 ? (
-        <p className="text-muted-foreground">No images uploaded yet.</p>
-      ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {items.map((item) => (
-            <Card key={item.id} className="overflow-hidden">
-              <img src={item.image_url} alt={item.title} className="w-full h-48 object-cover" loading="lazy" />
-              <div className="p-3">
-                <p className="text-xs text-primary font-semibold uppercase tracking-wider">{item.category}</p>
-                <p className="font-semibold text-sm mt-1 line-clamp-1">{item.title}</p>
-                {item.description && <p className="text-xs text-muted-foreground line-clamp-1">{item.description}</p>}
-                <Button variant="destructive" size="sm" className="mt-3 w-full" onClick={() => handleDelete(item)}>
-                  <Trash2 className="w-4 h-4 mr-1" /> Delete
+      {/* ITEMS */}
+      <div className="grid md:grid-cols-3 gap-4">
+        {items.map((item) => (
+          <Card key={item.id} className="p-3">
+            <img
+              src={item.image_url}
+              className="h-40 w-full object-cover"
+            />
+
+            <p className="font-semibold">{item.title}</p>
+
+            {editItemId === item.id ? (
+              <>
+                <Input
+                  value={editTitle}
+                  onChange={(e) => setEditTitle(e.target.value)}
+                />
+
+                <Button onClick={() => saveEdit(item.id)}>
+                  Save
                 </Button>
-              </div>
-            </Card>
-          ))}
-        </div>
-      )}
+
+                <Button onClick={() => setEditItemId(null)}>
+                  Cancel
+                </Button>
+              </>
+            ) : (
+              <Button onClick={() => startEdit(item)}>Edit</Button>
+            )}
+
+            <Button
+              variant="destructive"
+              onClick={() => handleDelete(item)}
+            >
+              <Trash2 className="w-4 h-4 mr-2" />
+              Delete
+            </Button>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };
