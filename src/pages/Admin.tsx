@@ -498,6 +498,9 @@ const Admin = () => {
         </form>
       </Card>
 
+      <FeaturedVideoAdmin />
+
+
       <h2 className="text-xl font-semibold mb-4">
         Uploaded images ({items.length})
       </h2>
