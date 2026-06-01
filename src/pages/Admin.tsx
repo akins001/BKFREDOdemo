@@ -19,6 +19,7 @@ import {
   LogOut,
   Pencil,
 } from "lucide-react";
+import FeaturedVideoAdmin from "@/components/FeaturedVideoAdmin";
 
 const CATEGORIES = [
   "Turkish Doors",
