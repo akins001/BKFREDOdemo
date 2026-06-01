@@ -246,6 +246,8 @@ const Index = () => {
         </div>
       </section>
 
+      <FeaturedVideo />
+
       {/* CTA */}
       <section className="section-padding bg-muted">
         <div className="container-custom text-center">
