@@ -19,6 +19,7 @@ import {
   LogOut,
   Pencil,
 } from "lucide-react";
+import FeaturedVideoAdmin from "@/components/FeaturedVideoAdmin";
 
 const CATEGORIES = [
   "Turkish Doors",
@@ -496,6 +497,9 @@ const Admin = () => {
           </Button>
         </form>
       </Card>
+
+      <FeaturedVideoAdmin />
+
 
       <h2 className="text-xl font-semibold mb-4">
         Uploaded images ({items.length})

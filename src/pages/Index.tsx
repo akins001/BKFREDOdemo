@@ -10,6 +10,7 @@ import galleryFloor from "@/assets/gallery-floor1.jpg";
 import galleryWall from "@/assets/gallery-wall1.jpg";
 import galleryNonslip from "@/assets/gallery-nonslip1.jpg";
 import ScrollReveal from "@/components/ScrollReveal";
+import FeaturedVideo from "@/components/FeaturedVideo";
 
 const stats = [
   { value: "500+", label: "Projects Completed" },
@@ -244,6 +245,8 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      <FeaturedVideo />
 
       {/* CTA */}
       <section className="section-padding bg-muted">

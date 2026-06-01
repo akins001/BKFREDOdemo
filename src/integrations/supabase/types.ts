@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      featured_video: {
+        Row: {
+          autoplay: boolean
+          created_at: string
+          id: string
+          updated_at: string
+          youtube_url: string
+        }
+        Insert: {
+          autoplay?: boolean
+          created_at?: string
+          id?: string
+          updated_at?: string
+          youtube_url: string
+        }
+        Update: {
+          autoplay?: boolean
+          created_at?: string
+          id?: string
+          updated_at?: string
+          youtube_url?: string
+        }
+        Relationships: []
+      }
       gallery_images: {
         Row: {
           category: string
