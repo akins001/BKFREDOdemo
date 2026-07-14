@@ -2,6 +2,7 @@ import { CheckCircle } from "lucide-react";
 import teamImg from "@/assets/about-team.jpg";
 import ceoImg from "@/assets/ceo-portrait.jpg";
 import ScrollReveal from "@/components/ScrollReveal";
+import CoreStaff from "@/components/CoreStaff";
 
 const values = [
   "Premium quality Turkish luxury doors and tiles",
@@ -81,6 +82,9 @@ const About = () => (
         </div>
       </div>
     </section>
+
+    {/* Core Staff */}
+    <CoreStaff />
 
     {/* Values */}
     <section className="section-padding bg-background">
