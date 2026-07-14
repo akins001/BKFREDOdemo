@@ -83,6 +83,9 @@ const About = () => (
       </div>
     </section>
 
+    {/* Core Staff */}
+    <CoreStaff />
+
     {/* Values */}
     <section className="section-padding bg-background">
       <div className="container-custom">
