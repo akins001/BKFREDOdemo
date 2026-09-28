@@ -3,6 +3,8 @@ import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import ScrollReveal from "@/components/ScrollReveal";
 
+const WHATSAPP_NUMBER = "2348065361172";
+
 const contactInfo = [
   { icon: Phone, label: "Call Us", value: "+234 806 536 1172", href: "tel:+2348065361172" },
   { icon: Mail, label: "Email Us", value: "contact@bkfredo.com", href: "mailto:contact@bkfredo.com" },
@@ -16,7 +18,18 @@ const Contact = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast({ title: "Message Sent!", description: "We'll get back to you within 24 hours." });
+    const lines = [
+      "Hello B.K FRED O, I'd like to make an enquiry.",
+      "",
+      `Name: ${form.name}`,
+      form.email ? `Email: ${form.email}` : "",
+      form.phone ? `Phone: ${form.phone}` : "",
+      "",
+      `Message: ${form.message}`,
+    ].filter((l, i, a) => l !== "" || (i > 0 && a[i - 1] !== ""));
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join("\n"))}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+    toast({ title: "Opening WhatsApp…", description: "Press send in WhatsApp to deliver your message." });
     setForm({ name: "", email: "", phone: "", message: "" });
   };
 
@@ -73,12 +86,11 @@ const Contact = () => {
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1.5">Email</label>
                 <input
-                  required
                   type="email"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   className="w-full border border-input rounded px-4 py-3 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                  placeholder="you@example.com"
+                  placeholder="you@example.com (optional)"
                 />
               </div>
               <div>
@@ -103,7 +115,7 @@ const Contact = () => {
               />
             </div>
             <button type="submit" className="w-full gradient-primary text-primary-foreground py-3.5 rounded font-semibold text-sm hover:opacity-90 transition-opacity">
-              Send Message
+              Send via WhatsApp
             </button>
             </form>
           </ScrollReveal>
