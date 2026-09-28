@@ -1,15 +1,10 @@
 import { User, Users } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
 
-// TODO: Replace these placeholders with the real photos.
-// Once you have the files, drop them into src/assets/ and import them, e.g.:
-//   import managerImg from "@/assets/christopher-ogbaide.jpg";
-//   import teamGroupImg from "@/assets/team-group.jpg";
-//   import teamBehindScenesImg from "@/assets/team-behind-scenes.jpg";
-// Then swap the `null` below for the imported variable.
-const managerImg: string | null = null;
-const teamGroupImg: string | null = null;
-const teamBehindScenesImg: string | null = null;
+import managerImg from "@/assets/manager.jpg";
+import teamGroupImg from "@/assets/team.jpg";
+import factoryImg from "@/assets/factory.jpg";
+import salesImg from "@/assets/sales.jpg";
 
 const rosterStaff = [
   { name: "Jeremiah Osakpolor", role: "Sales Rep" },
@@ -20,6 +15,7 @@ const rosterStaff = [
   { name: "Patrick", role: "Loader" },
   { name: "Wisdom Ejeh", role: "Loader" },
   { name: "John Onah", role: "Loader" },
+  { name: "Davies Eriano", role: "Factory Boy" },
 ];
 
 const CoreStaff = () => (
@@ -45,7 +41,7 @@ const CoreStaff = () => (
                 <img
                   src={managerImg}
                   alt="Christopher Ogbaide - Manager"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover object-top"
                   loading="lazy"
                   width={600}
                   height={750}
@@ -80,7 +76,7 @@ const CoreStaff = () => (
               <img
                 src={teamGroupImg}
                 alt="B.K FRED O staff team in branded work uniforms"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover object-top"
                 loading="lazy"
                 width={1280}
                 height={720}
@@ -107,28 +103,31 @@ const CoreStaff = () => (
         ))}
       </div>
 
-      {/* Behind the Scenes - secondary photo */}
-      <ScrollReveal>
-        <div className="max-w-md mx-auto text-center">
-          <p className="text-primary font-semibold tracking-widest uppercase text-xs mb-3">
-            Behind the Scenes
-          </p>
-          <div className="rounded-lg overflow-hidden shadow-md border border-border aspect-[4/3] bg-muted flex items-center justify-center">
-            {teamBehindScenesImg ? (
-              <img
-                src={teamBehindScenesImg}
-                alt="The team at work"
-                className="w-full h-full object-cover"
-                loading="lazy"
-                width={640}
-                height={480}
-              />
-            ) : (
-              <Users className="w-12 h-12 text-muted-foreground/40" />
-            )}
-          </div>
-        </div>
-      </ScrollReveal>
+      {/* Factory Team + Sales Team - secondary photos */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-3xl mx-auto">
+        {[
+          { label: "Factory Team", src: factoryImg, alt: "B.K FRED O factory team at work" },
+          { label: "Sales Team", src: salesImg, alt: "B.K FRED O sales team" },
+        ].map((p, i) => (
+          <ScrollReveal key={p.label} delay={i * 0.1}>
+            <div className="text-center">
+              <p className="text-primary font-semibold tracking-widest uppercase text-xs mb-3">
+                {p.label}
+              </p>
+              <div className="rounded-lg overflow-hidden shadow-md border border-border aspect-[4/3] bg-muted">
+                <img
+                  src={p.src}
+                  alt={p.alt}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  width={640}
+                  height={480}
+                />
+              </div>
+            </div>
+          </ScrollReveal>
+        ))}
+      </div>
     </div>
   </section>
 );
