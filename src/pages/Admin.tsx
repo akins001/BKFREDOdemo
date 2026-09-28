@@ -20,7 +20,6 @@ import {
   Pencil,
 } from "lucide-react";
 import FeaturedVideoAdmin from "@/components/FeaturedVideoAdmin";
-import StaffAdmin from "@/components/StaffAdmin";
 
 const CATEGORIES = [
   "Turkish Doors",
@@ -500,10 +499,6 @@ const Admin = () => {
       </Card>
 
       <FeaturedVideoAdmin />
-
-      <StaffAdmin />
-
-
 
       <h2 className="text-xl font-semibold mb-4">
         Uploaded images ({items.length})
